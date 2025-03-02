@@ -1,13 +1,6 @@
-import React, { FC } from "react";
-import { cva } from "class-variance-authority";
+import type { ButtonHTMLAttributes, FC } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
-
-interface ButtonProps {
-  children: React.ReactNode;
-  intent?: "primary" | "secondary" | "danger";
-  size?: "small" | "medium" | "large";
-  isDisabled?: boolean;
-}
 
 export const buttonVariants = cva(
   "px-4 py-2 bg-blue-500 text-white rounded cursor-pointer",
@@ -25,6 +18,7 @@ export const buttonVariants = cva(
       },
       isDisabled: {
         true: "opacity-50 cursor-not-allowed",
+        false: "opacity-100 cursor-pointer",
       },
     },
     defaultVariants: {
@@ -34,16 +28,28 @@ export const buttonVariants = cva(
   }
 );
 
+export interface ButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "disabled">,
+    VariantProps<typeof buttonVariants> {}
+
 export const Button: FC<ButtonProps> = ({
+  className,
   children,
   intent = "primary",
   size = "medium",
   isDisabled = false,
+  ...props
 }) => {
-  const buttonClass = cn(buttonVariants({ intent, size, isDisabled }));
+  const buttonClass = cn(
+    buttonVariants({ intent, size, isDisabled, className })
+  );
 
   return (
-    <button className={buttonClass} disabled={isDisabled}>
+    <button
+      className={buttonClass}
+      disabled={isDisabled || undefined}
+      {...props}
+    >
       {children}
     </button>
   );

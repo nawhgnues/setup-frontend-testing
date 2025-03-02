@@ -1,0 +1,5 @@
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "husky is running!"
+pnpm lint-staged
+echo "OK. done."
